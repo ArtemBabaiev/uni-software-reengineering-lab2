@@ -9,19 +9,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Main {
-
-    public static String cleanText(String url) throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get(url)));
-        content = content.replaceAll("[^A-Za-z ]"," ").toLowerCase(Locale.ROOT);
-        return content;
-    }
+public class MainOriginal {
 
     public static void main(String[] args) throws IOException {
-
-        LocalDateTime start = LocalDateTime.now();
+    	Runtime runtime = Runtime.getRuntime();
+		long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+		long start = System.nanoTime();
        // Path path = Paths.get()
         String content = new String(Files.readAllBytes(Paths.get("src/edu/pro/txt/harry.txt")));
 
@@ -62,10 +58,12 @@ public class Main {
         for (int i = 0; i < 30; i++) {
             System.out.println(distincts[distincts.length - 1 - i]);
         }
-        LocalDateTime finish = LocalDateTime.now();
+        long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+		long finish = System.nanoTime();
 
-        System.out.println("------");
-        System.out.println(ChronoUnit.MILLIS.between(start, finish));
+		System.out.println("------");
+		System.out.println("Memory increased: " + (usedMemoryAfter - usedMemoryBefore) / 1_048_576.0 + "MB");
+		System.out.println("Execution Time: " + TimeUnit.NANOSECONDS.toMillis(finish - start) + "ms");
 
     }
 }
